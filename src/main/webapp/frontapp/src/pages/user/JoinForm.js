@@ -34,9 +34,9 @@ const JoinForm = (props) => {
       });
 
       navigate("/loginForm");
-    } catch (e) {
-      console.log(e);
-      alert(e.response.data.msg);
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.msg);
     }
   }
 
