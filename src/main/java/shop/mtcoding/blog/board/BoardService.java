@@ -80,7 +80,7 @@ public class BoardService {
         return boardList.stream().map(board -> new BoardResponse.MainDTO(board)).toList();
     }
 
-    public BoardResponse.DetailDTO 글상세보기(int boardId, User sessionUser) {
+    public BoardResponse.DetailDTO 글상세보기(int boardId, SessionUser sessionUser) {
         Board board = boardJPARepository.findByIdJoinUser(boardId)
                 .orElseThrow(() -> new Exception404("게시글을 찾을 수 없습니다"));
 

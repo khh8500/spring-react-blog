@@ -1,66 +1,67 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Pagination } from "react-bootstrap";
-import PostItem from "../../components/BoardItem";
+import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-const Home = () => {
-  const [page, setPage] = useState(0);
+const Detail = (props) => {
+  const { id } = useParams();
+  const jwt = useSelector((state) => state.jwt);
 
-  const [model, setModel] = useState({
-    totalPage: undefined,
-    number: undefined,
-    isFirst: true,
-    isLast: false,
-    boards: [],
+  const [board, setBoard] = useState({
+    id: undefined,
+    title: "",
+    content: "",
+    userId: undefined,
+    username: "",
+    owner: false,
+    replies: [],
   });
 
-  // http://localhost:8080 -> http://localhost:8080?page=0
-  // 실행시점 : 최초 렌더링
-  // 변경 : page가 바뀌면 useEffect 실행되게 할 예정
   useEffect(() => {
-    console.log("useEffect 실행");
-    apiHome();
-  }, [page]);
+    fetchDetail(id);
+  }, []);
 
-  async function apiHome() {
+  async function fetchDetail(boardId) {
     let response = await axios({
-      url: "http://localhost:8080?page=" + page,
-      method: "get",
+      url: `http://localhost:8080/api/boards/${boardId}/detail`,
+      headers: {
+        Authorization: jwt,
+      },
     });
+    let responseBody = response.data;
 
-    console.log("page", response.data.body);
-
-    setModel(response.data.body);
+    setBoard(responseBody.body);
   }
 
-  function prev() {
-    setPage(page - 1);
-  }
-  function next() {
-    console.log("next click");
-    setPage(page + 1);
-  }
+  function fetchDelete(boardId) {}
 
   return (
     <div>
-      {model.boards.map((board) => (
-        <PostItem key={board.id} id={board.id} title={board.title} />
-      ))}
+      <h1>{board.owner.toString()}</h1>
+      {board.owner ? (
+        <>
+          <Link to={`/updateForm/${board.id}`} className="btn btn-warning">
+            수정
+          </Link>
+          <Button
+            className="btn btn-danger"
+            onClick={() => fetchDelete(board.id)}
+          >
+            삭제
+          </Button>
+        </>
+      ) : (
+        ""
+      )}
 
       <br />
-      <div className="d-flex justify-content-center">
-        <Pagination>
-          <Pagination.Item onClick={prev} disabled={model.isFirst}>
-            Prev
-          </Pagination.Item>
-
-          <Pagination.Item onClick={next} disabled={model.isLast}>
-            Next
-          </Pagination.Item>
-        </Pagination>
-      </div>
+      <br />
+      <h1>{board.title}</h1>
+      <hr />
+      <div>{board.content}</div>
     </div>
   );
 };
 
-export default Home;
+export default Detail;
