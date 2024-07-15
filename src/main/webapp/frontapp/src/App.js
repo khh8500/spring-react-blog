@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/saveForm" element={<SaveForm />} />
-        <Route path="/post/:id" element={<Detail />} />
+        <Route path="/board/:id" element={<Detail />} />
         <Route path="/loginForm" element={<LoginForm />} />
         <Route path="/joinForm" element={<JoinForm />} />
         <Route path="/updateForm/:id" element={<UpdateForm />} />

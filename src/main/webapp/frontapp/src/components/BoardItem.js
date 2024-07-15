@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const BoardItem = ({ id, title }) => {
+const BoardItem = ({ id, title, page }) => {
   return (
     <Card className="mb-2">
       <Card.Body>

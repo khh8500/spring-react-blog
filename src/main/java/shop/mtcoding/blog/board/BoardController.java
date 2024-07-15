@@ -47,25 +47,17 @@ public class BoardController {
 
         String jwt = request.getHeader("Authorization");
 
+        BoardResponse.DetailDTO respDTO = null;
+
         try {
             if(!jwt.isEmpty()){
                 jwt = jwt.replace("Bearer ", "");
                 SessionUser sessionUser = JwtUtil.verify(jwt);
-
-                // 임시 세션 (jsessionId는 필요 없음)
-                HttpSession session = request.getSession();
-                session.setAttribute("sessionUser", sessionUser);
+                respDTO = boardService.글상세보기(id, sessionUser);
             }
         }catch (Exception e){
             throw new Exception401("토큰 검증 실패");
         }
-
-        SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
-        BoardResponse.DetailDTO respDTO = boardService.글상세보기(id, sessionUser);
-
-        // 이 친구만 예외
-        session.invalidate();
-
         return ResponseEntity.ok(new ApiUtil(respDTO));
     }
 
