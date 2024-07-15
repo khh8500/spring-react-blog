@@ -1,67 +1,68 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Pagination } from "react-bootstrap";
+import BoardItem from "../../components/BoardItem";
 
-const Detail = (props) => {
-  const { id } = useParams();
-  const jwt = useSelector((state) => state.jwt);
+const Home = () => {
+  const [page, setPage] = useState(0);
 
-  const [board, setBoard] = useState({
-    id: undefined,
-    title: "",
-    content: "",
-    userId: undefined,
-    username: "",
-    owner: false,
-    replies: [],
+  const [model, setModel] = useState({
+    totalPage: undefined,
+    number: undefined,
+    isFirst: true,
+    isLast: false,
+    boards: [],
   });
 
+  // http://localhost:8080 -> http://localhost:8080?page=0
+  // 실행시점 : 최초 렌더링
+  // 변경 : page가 바뀌면 useEffect 실행되게 할 예정
   useEffect(() => {
-    fetchDetail(id);
-  }, []);
+    console.log("useEffect 실행");
+    apiHome();
+  }, [page]);
 
-  async function fetchDetail(boardId) {
+  async function apiHome() {
     let response = await axios({
-      url: `http://localhost:8080/api/boards/${boardId}/detail`,
-      headers: {
-        Authorization: jwt,
-      },
+      url: "http://localhost:8080?page=" + page,
+      method: "get",
     });
-    let responseBody = response.data;
 
-    setBoard(responseBody.body);
+    setModel(response.data.body);
   }
 
-  function fetchDelete(boardId) {}
+  function prev() {
+    setPage(page - 1);
+  }
+  function next() {
+    setPage(page + 1);
+  }
 
   return (
     <div>
-      <h1>{board.owner.toString()}</h1>
-      {board.owner ? (
-        <>
-          <Link to={`/updateForm/${board.id}`} className="btn btn-warning">
-            수정
-          </Link>
-          <Button
-            className="btn btn-danger"
-            onClick={() => fetchDelete(board.id)}
-          >
-            삭제
-          </Button>
-        </>
-      ) : (
-        ""
-      )}
+      {model.boards.map((board) => (
+        <BoardItem
+          key={board.id}
+          id={board.id}
+          title={board.title}
+          page={page}
+        />
+      ))}
 
       <br />
-      <br />
-      <h1>{board.title}</h1>
-      <hr />
-      <div>{board.content}</div>
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Item onClick={prev} disabled={model.isFirst}>
+            Prev
+          </Pagination.Item>
+
+          <Pagination.Item onClick={next} disabled={model.isLast}>
+            Next
+          </Pagination.Item>
+        </Pagination>
+      </div>
     </div>
   );
 };
 
-export default Detail;
+export default Home;

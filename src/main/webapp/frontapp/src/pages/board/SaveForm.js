@@ -15,11 +15,10 @@ const SaveForm = (props) => {
 
   async function submitPost(e) {
     e.preventDefault();
-    console.log("board", board);
-    console.log("jwt", jwt);
 
-    alert(jwt);
     try {
+      console.log("board", board);
+      console.log("jwt", jwt);
       await axios({
         url: "http://localhost:8080/api/boards",
         method: "POST",
@@ -35,12 +34,12 @@ const SaveForm = (props) => {
     }
   }
 
-  const changeValue = (e) => {
+  function changeValue(e) {
     setBoard({
       ...board,
       [e.target.name]: e.target.value,
     });
-  };
+  }
 
   return (
     <div>

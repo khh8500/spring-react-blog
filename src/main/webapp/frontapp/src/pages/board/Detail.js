@@ -34,11 +34,11 @@ const Detail = (props) => {
     setBoard(responseBody.body);
   }
 
-  function fetchDelete(boardId) {}
+  async function fetchDelete(boardId) {}
 
   return (
     <div>
-      <h1>{board.owner.toString()}</h1>
+     <h1>{board.owner.toString()}</h1>
       {board.owner ? (
         <>
           <Link to={`/updateForm/${board.id}`} className="btn btn-warning">

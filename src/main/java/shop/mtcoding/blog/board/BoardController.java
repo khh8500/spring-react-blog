@@ -77,6 +77,8 @@ public class BoardController {
 
     @PostMapping("/api/boards")
     public ResponseEntity<?> save(@Valid @RequestBody BoardRequest.SaveDTO reqDTO, Errors errors) {
+        System.out.println("reqDTO");
+        System.out.println(reqDTO);
         SessionUser sessionUser = (SessionUser) session.getAttribute("sessionUser");
         BoardResponse.DTO respDTO = boardService.글쓰기(reqDTO, sessionUser);
         return ResponseEntity.ok(new ApiUtil(respDTO));
