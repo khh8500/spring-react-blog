@@ -68,9 +68,15 @@ public class BoardService {
         boardJPARepository.deleteById(boardId);
     }
 
-    public BoardResponse.MainV2DTO 글목록조회V2(Pageable pageable) {
-        Page<Board> boardPG = boardJPARepository.findAll(pageable);
-        return new BoardResponse.MainV2DTO(boardPG);
+    public BoardResponse.MainV2DTO 글목록조회V2(Pageable pageable, String keyword) {
+        if(keyword.isEmpty()){
+            Page<Board> boardPG = boardJPARepository.findAll(pageable);
+            return new BoardResponse.MainV2DTO(boardPG);
+        }else{
+            Page<Board> boardPG = boardJPARepository.findAll(pageable, keyword);
+            return new BoardResponse.MainV2DTO(boardPG);
+        }
+
     }
 
     public List<BoardResponse.MainDTO> 글목록조회() {

@@ -29,8 +29,8 @@ public class BoardController {
     private final HttpSession session;
 
     @GetMapping("/")
-    public ResponseEntity<?> mainV2(@PageableDefault(size=3, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
-        BoardResponse.MainV2DTO respDTO = boardService.글목록조회V2(pageable);
+    public ResponseEntity<?> mainV2(@PageableDefault(size=3, sort="id", direction = Sort.Direction.DESC) Pageable pageable, String keyword){
+        BoardResponse.MainV2DTO respDTO = boardService.글목록조회V2(pageable, keyword);
         return ResponseEntity.ok(new ApiUtil(respDTO));
     }
 

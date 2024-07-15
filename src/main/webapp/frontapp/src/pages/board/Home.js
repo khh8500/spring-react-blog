@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Pagination } from "react-bootstrap";
+import { Form, FormControl, Pagination } from "react-bootstrap";
 import BoardItem from "../../components/BoardItem";
 
 const Home = () => {
   const [page, setPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
 
   const [model, setModel] = useState({
     totalPage: undefined,
@@ -20,11 +21,11 @@ const Home = () => {
   useEffect(() => {
     console.log("useEffect 실행");
     apiHome();
-  }, [page]);
+  }, [page, keyword]);
 
   async function apiHome() {
     let response = await axios({
-      url: "http://localhost:8080?page=" + page,
+      url: `http://localhost:8080?page=${page}&keyword=${keyword}`,
       method: "get",
     });
 
@@ -38,9 +39,25 @@ const Home = () => {
     setPage(page + 1);
   }
 
+  function changeValue(e) {
+    setKeyword(e.target.value);
+    console.log("keyword", keyword);
+  }
+
   return (
     <div>
-      {model.boards.map((board) => (
+      <Form className="d-flex mb-4" onSubmit={""}>
+        <FormControl
+          type="search"
+          placeholder="Search"
+          className="me-2"
+          aria-label="Search"
+          value={keyword}
+          onChange={changeValue}
+        />
+      </Form>
+
+            {model.boards.map((board) => (
         <BoardItem
           key={board.id}
           id={board.id}
